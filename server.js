@@ -6,8 +6,8 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
-const TOKEN = "8679009953:AAE6I66uPMllDNCAdIL2vTUD7fs_Hvoo7uc";
-const CHAT_ID = "6145369088";
+const TOKEN = process.env.TOKEN;
+const CHAT_ID = process.env.CHAT_ID;
 const API = "https://api.telegram.org/bot" + TOKEN;
 
 app.post('/send', async (req, res) => {
